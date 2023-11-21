@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_boot
+    username: sa
+    password: rootroot
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  main:
+    allow-circular-references: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  sql:
+    init:
+      mode: always
+
+password:
+  length: 10
+
+#logging:
+#  level:
+#    root: debug
