@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_boot_local
+    username: sa
+    password: rootroot
+
+server:
+  port: 8081
+  openapi:
+    server-urls: http://localhost:8081/spring-boot-task/api/
+    module-name: @project.artifactId@
+    api-version: @project.version@

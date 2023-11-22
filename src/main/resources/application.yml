@@ -14,9 +14,30 @@ spring:
   sql:
     init:
       mode: always
+  jmx:
+    enabled: true
 
 password:
   length: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
 
 #logging:
 #  level:

@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://dev-server.com/dev_database
+    username: dev_user
+    password: dev_password

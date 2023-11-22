@@ -17,7 +17,8 @@ import com.epam.model.dto.TrainerShortDtoInput;
 import com.epam.model.dto.UserDtoInput;
 import com.epam.repo.TraineeRepo;
 import com.epam.repo.TrainerRepo;
-import lombok.RequiredArgsConstructor;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class TraineeServiceImpl implements TraineeService {
 
     private final TraineeRepo traineeRepo;
@@ -39,6 +39,18 @@ public class TraineeServiceImpl implements TraineeService {
 
     private final UserService userService;
 
+    private final Counter traineeRegistrationCounter;
+
+    public TraineeServiceImpl(TraineeRepo traineeRepo, TrainerRepo trainerRepo, TraineeMapper traineeMapper,
+                              AuthenticationService authenticationService, UserService userService, MeterRegistry meterRegistry) {
+        this.traineeRepo = traineeRepo;
+        this.trainerRepo = trainerRepo;
+        this.traineeMapper = traineeMapper;
+        this.authenticationService = authenticationService;
+        this.userService = userService;
+        this.traineeRegistrationCounter = meterRegistry.counter("trainee_registration");
+    }
+
     @Override
     @Transactional
     public TraineeSaveDtoOutput save(TraineeDtoInput traineeDtoInput) {
@@ -50,6 +62,10 @@ public class TraineeServiceImpl implements TraineeService {
         traineeToSave.setUser(user);
 
         Trainee trainee = traineeRepo.save(traineeToSave);
+
+        if (traineeRegistrationCounter != null) {
+            traineeRegistrationCounter.increment();
+        }
 
         return traineeMapper.toSaveDto(trainee);
     }

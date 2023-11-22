@@ -1,0 +1,13 @@
+auth-be:
+  verification:
+    redirect-url: http://staging.s-al-terentev.com/
+  forgot-password:
+    default-domain: http://staging.s-al-terentev.com/en-US/password-recovery
+
+server:
+  servlet:
+    context-path: /spring-boot-task/api
+  cors:
+    allowed-origins: http://staging.s-al-terentev.com
+  openapi:
+    server-urls: http://staging.s-al-terentev.com/spring-boot-task/api/

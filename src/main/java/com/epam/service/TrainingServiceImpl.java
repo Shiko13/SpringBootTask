@@ -16,6 +16,7 @@ import com.epam.repo.TrainerRepo;
 import com.epam.repo.TrainingRepo;
 import com.epam.spec.TrainingTraineeSpecification;
 import com.epam.spec.TrainingTrainerSpecification;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,7 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
+    @Timed("findByDateRangeAndTraineeUsernameTime")
     public List<TrainingForTraineeDtoOutput> findByDateRangeAndTraineeUsername(
             TrainingTraineeSpecification specification) {
 
@@ -74,6 +76,7 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
+    @Timed("findByDateRangeAndTrainerUsernameTime")
     public List<TrainingForTrainerDtoOutput> findByDateRangeAndTrainerUsername(
             TrainingTrainerSpecification specification) {
         log.info("findByDateRangeAndTrainerUsername, specification = {}", specification);
