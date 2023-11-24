@@ -1,0 +1,18 @@
+<settings>
+  <pluginGroups>
+    <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+  </pluginGroups>
+  <profiles>
+    <profile>
+      <id>sonar</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <sonar.token>
+          squ_0e501a0c7b0d028094f018f92cfd1c0dfa47703e
+        </sonar.token>
+      </properties>
+    </profile>
+  </profiles>
+</settings>
