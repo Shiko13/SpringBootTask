@@ -38,7 +38,7 @@ public class TraineeController {
     @GetMapping("/username")
     @ApiOperation("Get trainee profile by username")
     public TraineeDtoOutput getProfile(
-            @RequestParam @Pattern(regexp = "[a-zA-Z]+\\.[\\w-]+", message = "Invalid input format") String username,
+            @RequestParam @Pattern(regexp = "[a-z]+\\.[\\w-]+", message = "Invalid input format") String username,
             @RequestParam String password) {
         return traineeService.getByUsername(username, password);
     }

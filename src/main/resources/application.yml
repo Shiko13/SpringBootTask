@@ -20,6 +20,10 @@ spring:
 password:
   length: 10
 
+server:
+  hostname: "localhost"
+  port: 8080
+
 management:
   endpoints:
     web:
