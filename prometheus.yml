@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 5s
+
+  external_labels:
+    monitor: 'code-lab-monitor'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: ['localhost:8080']
