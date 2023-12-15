@@ -17,6 +17,7 @@ import com.epam.model.dto.TrainerShortDtoInput;
 import com.epam.model.dto.UserDtoInput;
 import com.epam.repo.TraineeRepo;
 import com.epam.repo.TrainerRepo;
+import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class TraineeServiceImpl implements TraineeService {
     private final UserService userService;
 
     @Override
+    @Counted("trainee_registration")
     @Transactional
     public TraineeSaveDtoOutput save(TraineeDtoInput traineeDtoInput) {
         log.info("save, traineeDtoInput = {}", traineeDtoInput);

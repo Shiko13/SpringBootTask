@@ -7,7 +7,8 @@ import com.epam.model.dto.UserActivateDtoInput;
 import com.epam.model.dto.UserDtoInput;
 import com.epam.repo.UserRepo;
 import com.epam.util.RandomStringGenerator;
-import lombok.RequiredArgsConstructor;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,23 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
 
     private final AuthenticationService authenticationService;
 
+    private final Counter loginAttemptsCounter;
+
     @Value("${password.length}")
     private int passwordLength;
+
+    public UserServiceImpl(UserRepo userRepo, AuthenticationService authenticationService,
+                           MeterRegistry meterRegistry) {
+        this.userRepo = userRepo;
+        this.authenticationService = authenticationService;
+        this.loginAttemptsCounter = meterRegistry.counter("login_attempts", "outcome", "success");
+    }
 
     @Override
     @Transactional
@@ -80,6 +89,10 @@ public class UserServiceImpl implements UserService {
 
         if (authenticationService.checkAccess(password, user)) {
             throw new AccessException(ErrorMessageConstants.ACCESS_ERROR_MESSAGE);
+        }
+
+        if (loginAttemptsCounter != null) {
+            loginAttemptsCounter.increment();
         }
     }
 

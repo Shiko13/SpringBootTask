@@ -16,17 +16,17 @@ import com.epam.model.dto.TrainerUpdateDtoOutput;
 import com.epam.model.dto.UserDtoInput;
 import com.epam.repo.TrainerRepo;
 import com.epam.repo.TrainingTypeRepo;
-import lombok.RequiredArgsConstructor;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerRepo trainerRepo;
@@ -38,6 +38,20 @@ public class TrainerServiceImpl implements TrainerService {
     private final AuthenticationService authenticationService;
 
     private final UserService userService;
+
+    private AtomicInteger freeActiveTrainers;
+
+    public TrainerServiceImpl(TrainerRepo trainerRepo, TrainerMapper trainerMapper, TrainingTypeRepo trainingTypeRepo,
+                              AuthenticationService authenticationService, UserService userService,
+                              MeterRegistry meterRegistry) {
+        this.trainerRepo = trainerRepo;
+        this.trainerMapper = trainerMapper;
+        this.trainingTypeRepo = trainingTypeRepo;
+        this.authenticationService = authenticationService;
+        this.userService = userService;
+        freeActiveTrainers = new AtomicInteger();
+        this.freeActiveTrainers = meterRegistry.gauge("free-active-trainers", freeActiveTrainers);
+    }
 
 
     @Override
@@ -106,6 +120,10 @@ public class TrainerServiceImpl implements TrainerService {
         authenticate(password, user);
 
         List<Trainer> trainers = trainerRepo.findByTraineesIsEmptyAndUserIsActiveTrue();
+
+        if (freeActiveTrainers != null) {
+            freeActiveTrainers.set(trainers.size());
+        }
 
         if (trainers.isEmpty()) {
             return new ArrayList<>();

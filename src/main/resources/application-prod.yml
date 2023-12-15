@@ -1,0 +1,13 @@
+spring-boot-task:
+  verification:
+    redirect-url: https://s-al-terentev.com/
+  forgot-password:
+    default-domain: https://s-al-terentev/en-US/password-recovery
+
+server:
+  servlet:
+    context-path: /spring-boot-task/api
+  cors:
+    allowed-origins: https://s-al-terentev.com
+  openapi:
+    server-urls: https://s-al-terentev/spring-boot-task/api/
